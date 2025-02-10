@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latest Blog Posts</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", async function() {
+            const blogUrl = "https://www.theplatelink.co.uk/cam/blog/";
+            const postContainer = document.getElementById("posts");
+            
+            try {
+                const response = await fetch(blogUrl);
+                const text = await response.text();
+                
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, "text/html");
+                const links = doc.querySelectorAll("a");
+                
+                links.forEach(link => {
+                    if (link.href.includes("/cam/blog/")) { // Filter relevant blog posts
+                        const postLink = document.createElement("a");
+                        postLink.href = link.href;
+                        postLink.textContent = link.textContent;
+                        postLink.target = "_blank";
+                        postContainer.appendChild(postLink);
+                        postContainer.appendChild(document.createElement("br"));
+                    }
+                });
+            } catch (error) {
+                console.error("Error fetching blog posts:", error);
+            }
+        });
+    </script>
+</head>
+<body>
+    <h1>Latest Blog Posts</h1>
+    <div id="posts">Loading...</div>
+</body>
+</html>
